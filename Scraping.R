@@ -1,3 +1,6 @@
+library(rvest)
+library(magritr)
+library(XML)
 artists<-c()
 album<-c()
 genre<-c()
