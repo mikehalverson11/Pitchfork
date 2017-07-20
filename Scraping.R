@@ -8,9 +8,11 @@ scores<-c()
 labels<-c()
 years<-c()
 dates<-c()
-N=1000 # what page of reviews you want to go to
+reviewer<-c()
+n=1 # starting page
+N=1591 # what page of reviews you want to go to
 # iterate over all specified pages
-for (i in 1:N){
+for (i in n:N){
   link <-paste("http://pitchfork.com/reviews/albums/?page=",i,sep="")
   htmlinit <- read_html(link)
   message(i)
@@ -40,10 +42,16 @@ for (i in 1:N){
     year<-substring(year,2,10)
     years<-c(years,year)
     scores<-c(scores,score)
+    writer<-html_text(html_nodes(htmlrev,css=".authors-detail__display-name"))
+    if (length(writer)!=1){
+      writer="N/A"
+    }
+    reviewer<-c(reviewer,rep(writer,length(art)))
     if (length(labels)!=length(scores)){message("WRONG",i,album[length(album)])}
   }
 }
 # convert string scores to scores 
 scores <-as.numeric(scores)
 #create dataframe
-df<-data.frame(artists,album,genre,scores,years,labels,dates)
+df<-data.frame(artists,album,genre,scores,years,labels,dates,reviewer)
+write.csv(df,"Pitchfork2.csv")
